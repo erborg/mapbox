@@ -6,8 +6,8 @@ function App() {
     const [random, setRandom] = useState(Math.random());
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const [lng, setLng] = useState(-70.9);
-    const [lat, setLat] = useState(42.35);
+    const [lng, setLng] = useState(55.7558);
+    const [lat, setLat] = useState(37.6173);
     const [zoom, setZoom] = useState(9);
     mapboxgl.accessToken =
         "pk.eyJ1IjoiZXJib3JnIiwiYSI6ImNrb2Q0b21nZDFob3oyb3FtdHNjNzgxbGUifQ.hEsH0NC3rOAEIXAtg14rwA";
@@ -20,6 +20,13 @@ function App() {
             center: [lng, lat],
             zoom: zoom
         });
+    });
+
+    useEffect(() => {
+        const marker = new mapboxgl.Marker()
+            .setLngLat([lng, lat])
+            .addTo(map.current)
+        return () => marker.remove();
     });
 
     useEffect(() => {
