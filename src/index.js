@@ -1,38 +1,42 @@
-import React, {useEffect, useRef, useState} from "react";
-import {render} from "react-dom";
-import useMapbox from "./useMapbox.js"
+import React, { useState, useEffect } from "react";
+import { render } from "react-dom";
+import "./style.css";
+import useMapbox from "./useMapbox.js";
 
 function App() {
-    const [random, setRandom] = useState(Math.random());
-    const mapContainer = useRef(null);
-    const map = useRef(null);
-    const [lng, setLng] = useState(55.7558);
-    const [lat, setLat] = useState(37.6173);
-    const [zoom, setZoom] = useState(9);
-
-    useMapbox(map, mapContainer, lng, lat, zoom)
+    const [currentShop, setCurrentShop] = useState("km20");
+    const [marker, setCurrentMarker] = useState([37.610641, 55.761994]);
 
     useEffect(() => {
-        if (!map.current) return;
-        map.current.on('move', () => {
-            setLng(map.current.getCenter().lng.toFixed(4));
-            setLat(map.current.getCenter().lat.toFixed(4));
-            setZoom(map.current.getZoom().toFixed(2));
-        });
-    });
+        if (currentShop === "km20") {
+            setCurrentMarker([37.610641, 55.761994]);
+        }
+        if (currentShop === "belief") {
+            setCurrentMarker([37.601152, 55.733396]);
+        }
+        if (currentShop === "brandshop") {
+            setCurrentMarker([37.616812, 55.767839]);
+        }
+    }, [currentShop]);
 
+    useMapbox(marker);
     return (
         <>
-            <button id="rerender" onClick={() => setRandom(Math.random())}>
-                Ререндер!
-            </button>
-            <div ref={mapContainer} id="map">
-                <div className="sidebar">
-                    Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-                </div>
+            <div className="map-overlay">
+                <h3>Выберите магазин: </h3>
+                <select
+                    onChange={(e) => {
+                        setCurrentShop(e.target.value);
+                    }}
+                >
+                    <option value="km20">KM20</option>
+                    <option value="belief">BELIEF</option>
+                    <option value="brandshop">BRANDSHOP</option>
+                </select>
             </div>
+            <div id="map"></div>
         </>
     );
 }
 
-render(<App/>, document.querySelector("#root"));
+render(<App />, document.querySelector("#root"));
